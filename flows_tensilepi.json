@@ -747,6 +747,7 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
+        "allowrate": false,
         "outputs": 1,
         "x": 810,
         "y": 300,
@@ -787,7 +788,7 @@
         "type": "function",
         "z": "b053200104e6f31e",
         "name": "Parse signed speed",
-        "func": "//\n// Check the input message payload for a signed number\n// representing the speed and direction for the linear actuator.\n// Parse, and generate positive speed and direction message tuple.\n\nvar signedSpeed = -1; // set to unallowed value in case input is not a number\nvar direction = flow.get(\"direction\");\n\n// Check to see the input payload is a number.\nif (typeof(msg.payload) == \"number\") {\n    signedSpeed = msg.payload;\n    if (signedSpeed < 0) {\n        direction = 0;\n        signedSpeed = -1*signedSpeed;\n    } else {\n        direction = 1;\n    }\n}\n\nmsg.payload = signedSpeed;\nvar dirMsg = {payload : direction};\n\nreturn [dirMsg, msg];",
+        "func": "//\n// Check the input message payload for a signed number\n// representing the speed and direction for the linear actuator.\n// Parse, and generate positive speed and direction message tuple.\n\nvar signedSpeed = -1; // set to unallowed value in case input is not a number\nvar direction = flow.get(\"direction\");\n\n// Check to see the input payload is a number.\nif (typeof(msg.payload) == \"number\") {\n    signedSpeed = msg.payload;\n    if (signedSpeed < 0) {\n        direction = 0; // extend\n        signedSpeed = -1*signedSpeed;\n    } else {\n        direction = 1; // retract\n    }\n}\n\n//node.warn(\"direction \"+direction);\n\nmsg.payload = signedSpeed;\nvar dirMsg = {payload : direction};\n\nreturn [dirMsg, msg];",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -836,11 +837,12 @@
         "topic": "",
         "payload": "0",
         "payloadType": "num",
-        "x": 210,
-        "y": 260,
+        "x": 330,
+        "y": 160,
         "wires": [
             [
-                "c844787d8434ef1a"
+                "c844787d8434ef1a",
+                "15c23ffc45cb2543"
             ]
         ],
         "info": "Used to initialize a zero state for most of the tension UI elements and variables"
@@ -1439,7 +1441,7 @@
         "name": "Tension UI Elements",
         "info": "This section contains the UI elements contained in the \"Tension\" section of the web interface",
         "x": 510,
-        "y": 1820,
+        "y": 1780,
         "wires": []
     },
     {
@@ -1465,8 +1467,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 940,
-        "y": 2160,
+        "x": 920,
+        "y": 2400,
         "wires": []
     },
     {
@@ -1499,7 +1501,7 @@
         "splitLayout": "",
         "className": "",
         "x": 300,
-        "y": 2080,
+        "y": 2220,
         "wires": [
             [
                 "744567f4.5370a8"
@@ -1516,11 +1518,11 @@
         "height": 1,
         "name": "Target Tension",
         "label": "Target Tension: ",
-        "format": "{{msg.payload.newtons}}",
+        "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
-        "x": 860,
-        "y": 2040,
+        "x": 980,
+        "y": 2160,
         "wires": []
     },
     {
@@ -1554,7 +1556,7 @@
         "id": "744567f4.5370a8",
         "type": "change",
         "z": "80918f6b.83622",
-        "name": "Set Target",
+        "name": "Set setpoint",
         "rules": [
             {
                 "t": "set",
@@ -1570,12 +1572,10 @@
         "to": "",
         "reg": false,
         "x": 570,
-        "y": 2080,
+        "y": 2220,
         "wires": [
             [
-                "6b0c7b28.ed902c",
-                "336da45a6b971757",
-                "95e4051ffc1db159"
+                "c1850dd81534ec50"
             ]
         ]
     },
@@ -1586,7 +1586,7 @@
         "name": "Receive tension meas.",
         "serial": "f70d4a1e.05e8d",
         "x": 300,
-        "y": 2180,
+        "y": 2360,
         "wires": [
             [
                 "42a92748.0dd5f"
@@ -1605,7 +1605,7 @@
         "finalize": "",
         "libs": [],
         "x": 530,
-        "y": 2180,
+        "y": 2360,
         "wires": [
             [
                 "2320837f46723430"
@@ -1630,7 +1630,7 @@
         "payload": "0",
         "payloadType": "num",
         "x": 70,
-        "y": 2140,
+        "y": 2160,
         "wires": [
             [
                 "5a20bfb3.b0819",
@@ -1638,7 +1638,9 @@
                 "acd047a5.ee8e1",
                 "410d9904.200fe",
                 "8fbf5e5b.1ff25",
-                "a3291006a20c4eb1"
+                "a3291006a20c4eb1",
+                "336da45a6b971757",
+                "6b0c7b28.ed902c"
             ]
         ],
         "info": "Used to initialize a zero state for most of the tension UI elements and variables"
@@ -1659,11 +1661,11 @@
         "topic": "topic",
         "topicType": "msg",
         "min": 0,
-        "max": "200",
+        "max": "100",
         "step": "5",
         "className": "",
         "x": 280,
-        "y": 2000,
+        "y": 2060,
         "wires": [
             [
                 "acd047a5.ee8e1",
@@ -1751,6 +1753,7 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
+        "allowrate": false,
         "outputs": 1,
         "x": 420,
         "y": 1220,
@@ -1867,7 +1870,7 @@
         "offcolor": "",
         "animate": false,
         "x": 270,
-        "y": 1960,
+        "y": 2020,
         "wires": [
             [
                 "800518d6.4f2c6"
@@ -1894,7 +1897,7 @@
         "to": "",
         "reg": false,
         "x": 580,
-        "y": 1960,
+        "y": 2020,
         "wires": [
             []
         ]
@@ -2367,7 +2370,7 @@
         "to": "",
         "reg": false,
         "x": 600,
-        "y": 2000,
+        "y": 2060,
         "wires": [
             []
         ]
@@ -2741,7 +2744,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 550,
-        "y": 2040,
+        "y": 2100,
         "wires": []
     },
     {
@@ -2774,7 +2777,7 @@
         "type": "ui_switch",
         "z": "80918f6b.83622",
         "name": "Manual Actuator Control",
-        "label": "Manual Actuator Control",
+        "label": "Toggle Manual/Automatic control",
         "tooltip": "Switches between manual and automatic control of the linear actuator",
         "group": "7a34a153.27eab",
         "order": 3,
@@ -2785,12 +2788,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "1",
-        "onvalueType": "num",
+        "onvalue": "true",
+        "onvalueType": "bool",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "0",
-        "offvalueType": "num",
+        "offvalue": "false",
+        "offvalueType": "bool",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -2799,34 +2802,8 @@
         "y": 1860,
         "wires": [
             [
-                "1882f008.1ffd38"
-            ]
-        ]
-    },
-    {
-        "id": "1882f008.1ffd38",
-        "type": "change",
-        "z": "80918f6b.83622",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "manual",
-                "pt": "flow",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 580,
-        "y": 1860,
-        "wires": [
-            [
-                "6d6b2f525c3c49cb"
+                "3371944d6a663ef5",
+                "22c6eae9272877dc"
             ]
         ]
     },
@@ -2851,7 +2828,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 860,
-        "y": 1960,
+        "y": 2020,
         "wires": [
             [
                 "b25261d0fe508a2d"
@@ -2873,14 +2850,14 @@
         "type": "function",
         "z": "80918f6b.83622",
         "name": "format for retraction",
-        "func": "var actuator = flow.get(\"actuator\");\nvar manual = flow.get(\"manual\");\n//var stepped = flow.get(\"stepped\");\n\n\nif((actuator == 1) && (manual == 1)) { \n    msg.payload = Math.abs(msg.payload);\n} else {\n    msg.payload = 0; \n}\n\nreturn msg;",
+        "func": "var actuator = flow.get(\"actuator\");\nvar pidEnabled = flow.get(\"pidEnabled\");\n\nif((actuator == 1) && (pidEnabled == 0)) { \n    msg.payload = Math.abs(msg.payload);\n} else {\n    msg.payload = 0; \n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 1110,
-        "y": 1920,
+        "y": 1980,
         "wires": [
             [
                 "86cf2b51dc506b9f"
@@ -2951,7 +2928,7 @@
         "format": " Whenever a sample is loaded or being loaded always use slow speeds (<150). ",
         "layout": "col-center",
         "x": 1080,
-        "y": 1820,
+        "y": 1780,
         "wires": []
     },
     {
@@ -3048,16 +3025,16 @@
         "z": "80918f6b.83622",
         "name": "Tensile PID Controller",
         "setpoint": "0",
-        "pb": "0",
-        "ti": 9999,
-        "td": 0,
+        "pb": "10",
+        "ti": "10000",
+        "td": "0",
         "integral_default": "0",
         "smooth_factor": "0",
         "max_interval": 600,
         "enable": 1,
         "disabled_op": 0,
-        "x": 1340,
-        "y": 2300,
+        "x": 1220,
+        "y": 2360,
         "wires": [
             [
                 "6e7dd7dfe78a7a70",
@@ -3077,99 +3054,20 @@
         "round": true,
         "property": "payload",
         "name": "PID to signed motor speed",
-        "x": 1640,
-        "y": 2260,
-        "wires": [
-            [
-                "b93df994fb5298c7",
-                "7ba3c4065103a84e"
-            ]
-        ]
-    },
-    {
-        "id": "ab1a3fb4c00ff7fa",
-        "type": "range",
-        "z": "80918f6b.83622",
-        "minin": "0",
-        "maxin": "100",
-        "minout": "0",
-        "maxout": "1",
-        "action": "scale",
-        "round": false,
-        "property": "payload",
-        "name": "tension to PID input",
-        "x": 930,
-        "y": 2240,
-        "wires": [
-            [
-                "6ae623feb3e9882b",
-                "b9c3780fa3d4700c"
-            ]
-        ]
-    },
-    {
-        "id": "07a7b240db8c7f79",
-        "type": "inject",
-        "z": "80918f6b.83622",
-        "name": "set to 0.1",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "setpoint",
-        "payload": "0.1",
-        "payloadType": "num",
-        "x": 1080,
+        "x": 1500,
         "y": 2360,
         "wires": [
             [
-                "6ae623feb3e9882b"
+                "b93df994fb5298c7",
+                "39be58e5643d66bd"
             ]
         ]
     },
     {
-        "id": "09212e48a8173efe",
-        "type": "inject",
-        "z": "80918f6b.83622",
-        "name": "set to 0.01",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "setpoint",
-        "payload": "0.01",
-        "payloadType": "num",
-        "x": 1080,
-        "y": 2400,
-        "wires": [
-            [
-                "6ae623feb3e9882b"
-            ]
-        ]
-    },
-    {
-        "id": "7ba8f8eb61f87dae",
+        "id": "79ea6d4526652779",
         "type": "debug",
         "z": "80918f6b.83622",
-        "name": "measured tension",
+        "name": "pid output",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -3178,51 +3076,9 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 970,
-        "y": 2120,
+        "x": 1520,
+        "y": 2060,
         "wires": []
-    },
-    {
-        "id": "79ea6d4526652779",
-        "type": "debug",
-        "z": "80918f6b.83622",
-        "name": "pid output",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1560,
-        "y": 2320,
-        "wires": []
-    },
-    {
-        "id": "4b19e8a4868d8f46",
-        "type": "change",
-        "z": "80918f6b.83622",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "pidEnable",
-                "pt": "flow",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 770,
-        "y": 2360,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "86cf2b51dc506b9f",
@@ -3230,7 +3086,7 @@
         "z": "80918f6b.83622",
         "name": "",
         "x": 1340,
-        "y": 1920,
+        "y": 1980,
         "wires": [
             [
                 "65d2be5b6d775b05"
@@ -3257,7 +3113,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1510,
-        "y": 1960,
+        "y": 2020,
         "wires": []
     },
     {
@@ -3274,7 +3130,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1510,
-        "y": 1920,
+        "y": 1980,
         "wires": []
     },
     {
@@ -3291,7 +3147,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1510,
-        "y": 1880,
+        "y": 1940,
         "wires": []
     },
     {
@@ -3314,7 +3170,7 @@
         "to": "",
         "reg": false,
         "x": 590,
-        "y": 1920,
+        "y": 1980,
         "wires": [
             []
         ]
@@ -3340,7 +3196,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 860,
-        "y": 1920,
+        "y": 1980,
         "wires": [
             [
                 "ae20f800.83ba3"
@@ -3352,65 +3208,17 @@
         "type": "function",
         "z": "80918f6b.83622",
         "name": "format for extension",
-        "func": "var actuator = flow.get(\"actuator\");\nvar manual = flow.get(\"manual\");\n//var stepped = flow.get(\"stepped\");\n\n\nif((actuator == 1) && (manual == 1)) { \n    msg.payload = -1 * Math.abs(msg.payload);\n} else {\n    msg.payload = 0; \n}\n\nreturn msg;",
+        "func": "var actuator = flow.get(\"actuator\");\nvar pidEnabled = flow.get(\"pidEnabled\");\n\nif((actuator == 1) && (pidEnabled == 0)) { \n    msg.payload = -1 * Math.abs(msg.payload);\n} else {\n    msg.payload = 0; \n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 1120,
-        "y": 1960,
+        "y": 2020,
         "wires": [
             [
                 "86cf2b51dc506b9f"
-            ]
-        ]
-    },
-    {
-        "id": "db6cb7344ea2de66",
-        "type": "function",
-        "z": "80918f6b.83622",
-        "name": "Toggle PID enabled",
-        "func": "var manualState = msg.payload;\nvar pidEnabled = flow.get(\"pidEnabled\");\nif (typeof pidEnabled == \"undefined\") {\n    pidEnabled = 0;\n}\n\nif (manualState == 1) {\n    pidEnabled = 0;\n} else {\n    pidEnabled = 0;\n}\n\nflow.set(\"pidEnabled\", pidEnabled);\n\nmsg.payload = pidEnabled;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 350,
-        "y": 2300,
-        "wires": [
-            [
-                "6ae623feb3e9882b"
-            ]
-        ]
-    },
-    {
-        "id": "6d6b2f525c3c49cb",
-        "type": "link out",
-        "z": "80918f6b.83622",
-        "name": "Manual State",
-        "mode": "link",
-        "links": [
-            "65cf2355b3dbe6d4"
-        ],
-        "x": 715,
-        "y": 1860,
-        "wires": []
-    },
-    {
-        "id": "65cf2355b3dbe6d4",
-        "type": "link in",
-        "z": "80918f6b.83622",
-        "name": "",
-        "links": [
-            "6d6b2f525c3c49cb"
-        ],
-        "x": 215,
-        "y": 2300,
-        "wires": [
-            [
-                "db6cb7344ea2de66"
             ]
         ]
     },
@@ -3431,8 +3239,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1610,
-        "y": 2200,
+        "x": 1530,
+        "y": 2320,
         "wires": [
             [
                 "bf9851a7dd0af6da"
@@ -3456,8 +3264,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1620,
-        "y": 2140,
+        "x": 1520,
+        "y": 2280,
         "wires": [
             [
                 "86cf2b51dc506b9f"
@@ -3483,8 +3291,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 950,
-        "y": 2200,
+        "x": 930,
+        "y": 2440,
         "wires": [
             [
                 "79264a5b25abc21c"
@@ -3498,18 +3306,19 @@
         "name": "",
         "property": "payload",
         "action": "mean",
-        "count": "12",
+        "count": "5",
         "round": "2",
         "mult": "single",
         "reduce": false,
         "x": 720,
-        "y": 2180,
+        "y": 2360,
         "wires": [
             [
-                "ab1a3fb4c00ff7fa",
                 "34f78899.aa8fb8",
-                "7ba8f8eb61f87dae",
-                "fc8bc492f499c29a"
+                "fc8bc492f499c29a",
+                "6ae623feb3e9882b",
+                "b9c3780fa3d4700c",
+                "cd5d5fb39d80b91c"
             ]
         ]
     },
@@ -3526,8 +3335,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1300,
-        "y": 2380,
+        "x": 920,
+        "y": 2480,
         "wires": []
     },
     {
@@ -3542,7 +3351,7 @@
         "gtype": "gage",
         "title": "Target Tension",
         "label": "kg",
-        "format": "{{msg.payload.newtons}}",
+        "format": "{{msg.payload}}",
         "min": "-10",
         "max": "100",
         "colors": [
@@ -3553,45 +3362,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 860,
-        "y": 2000,
-        "wires": []
-    },
-    {
-        "id": "95e4051ffc1db159",
-        "type": "function",
-        "z": "80918f6b.83622",
-        "name": "Set setpoint",
-        "func": "var setpoint = msg.payload.newtons;\n\nif (setpoint >= 0) {\n    msg.payload = setpoint/100;\n} else {\n    msg.setpoint = 0;\n}\nmsg.topic = \"setpoint\";\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 2080,
-        "wires": [
-            [
-                "6ae623feb3e9882b",
-                "df56df7f206dee66"
-            ]
-        ]
-    },
-    {
-        "id": "df56df7f206dee66",
-        "type": "debug",
-        "z": "80918f6b.83622",
-        "name": "pid input",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1080,
-        "y": 2060,
+        "x": 980,
+        "y": 2120,
         "wires": []
     },
     {
@@ -3610,8 +3382,8 @@
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
-        "ymin": "0",
-        "ymax": "30",
+        "ymin": "",
+        "ymax": "",
         "removeOlder": "150",
         "removeOlderPoints": "1000",
         "removeOlderUnit": "1",
@@ -3632,33 +3404,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1140,
-        "y": 2200,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "7ba3c4065103a84e",
-        "type": "change",
-        "z": "80918f6b.83622",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "PID",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1530,
-        "y": 2460,
+        "x": 1100,
+        "y": 2440,
         "wires": [
             []
         ]
@@ -3667,24 +3414,26 @@
         "id": "3371944d6a663ef5",
         "type": "function",
         "z": "80918f6b.83622",
-        "name": "",
-        "func": "\nreturn msg;",
+        "name": "Select control mode",
+        "func": "var temp = msg.payload;\nif (typeof temp == \"undefined\") {\n    node.warn(\"it's not\");\n}\n// node.warn(\"msg \"+msg.playload);\nif (msg.payload == true) {\n    msg.payload = flow.get(\"automatic\");\n} else {\n    msg.payload = flow.get(\"manualDisp\");\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 350,
-        "y": 2520,
+        "x": 560,
+        "y": 1860,
         "wires": [
-            []
+            [
+                "b1eac518688540a1"
+            ]
         ]
     },
     {
         "id": "7be9e13eb73ab8fb",
         "type": "inject",
         "z": "80918f6b.83622",
-        "name": "Initialize 1",
+        "name": "Initialize false",
         "props": [
             {
                 "p": "payload"
@@ -3695,38 +3444,274 @@
         "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 70,
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 80,
         "y": 1860,
         "wires": [
             [
-                "166637d5.b60258",
-                "1882f008.1ffd38"
+                "166637d5.b60258"
             ]
         ],
         "info": "Used to initialize a zero state for most of the tension UI elements and variables"
     },
     {
-        "id": "4fc53815eaab7d2a",
-        "type": "ui_template",
+        "id": "d92056c0d198e2eb",
+        "type": "change",
         "z": "80918f6b.83622",
-        "group": "f44b46f2.4aaa",
+        "name": "Set Automatic Mode display",
+        "rules": [
+            {
+                "t": "set",
+                "p": "automatic",
+                "pt": "flow",
+                "to": "[{\"title\":\"Manual Tension\",\"icon_name\":\"radio_button_unchecked\"},{\"title\":\"Automatic Tension\",\"icon_name\":\"radio_button_checked\"}]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 1920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a0b8151380bea5ce",
+        "type": "change",
+        "z": "80918f6b.83622",
+        "name": "Set Manual Mode display",
+        "rules": [
+            {
+                "t": "set",
+                "p": "manualDisp",
+                "pt": "flow",
+                "to": "[{\"title\":\"Manual Tension\",\"icon_name\":\"radio_button_checked\"},{\"title\":\"Automatic Tension\",\"icon_name\":\"radio_button_unchecked\"}]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c547d36f72ae225a",
+        "type": "inject",
+        "z": "80918f6b.83622",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 110,
+        "y": 1920,
+        "wires": [
+            [
+                "d92056c0d198e2eb"
+            ]
+        ]
+    },
+    {
+        "id": "b1eac518688540a1",
+        "type": "ui_list",
+        "z": "80918f6b.83622",
+        "group": "7a34a153.27eab",
         "name": "",
         "order": 4,
         "width": 0,
         "height": 0,
-        "format": "<div ng-bind-html=\"msg.payload\"></div>",
-        "storeOutMessages": true,
-        "fwdInMessages": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 270,
-        "y": 2400,
+        "lineType": "one",
+        "actionType": "none",
+        "allowHTML": false,
+        "outputs": 0,
+        "topic": "",
+        "x": 770,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "cff8b8914d52f58d",
+        "type": "inject",
+        "z": "80918f6b.83622",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 110,
+        "y": 1960,
         "wires": [
-            []
+            [
+                "a0b8151380bea5ce"
+            ]
         ]
+    },
+    {
+        "id": "b11f639b04f3efb1",
+        "type": "function",
+        "z": "80918f6b.83622",
+        "name": "Enable/Disable PID",
+        "func": "var temp = msg.payload;\n\nif (msg.payload == true) {\n    msg.payload = 1;\n    flow.set(\"pidEnabled\",1);\n} else {\n    msg.payload = 0;\n    flow.set(\"pidEnabled\",0);\n}\nmsg.topic = \"enable\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 2300,
+        "wires": [
+            [
+                "6ae623feb3e9882b"
+            ]
+        ]
+    },
+    {
+        "id": "39be58e5643d66bd",
+        "type": "debug",
+        "z": "80918f6b.83622",
+        "name": "scaled pid output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1550,
+        "y": 2420,
+        "wires": []
+    },
+    {
+        "id": "c1850dd81534ec50",
+        "type": "change",
+        "z": "80918f6b.83622",
+        "name": "Set payload",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.newtons",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 2220,
+        "wires": [
+            [
+                "6b0c7b28.ed902c",
+                "336da45a6b971757",
+                "94bf9fb90ac15d9d"
+            ]
+        ]
+    },
+    {
+        "id": "22c6eae9272877dc",
+        "type": "link out",
+        "z": "80918f6b.83622",
+        "name": "enable PID",
+        "mode": "link",
+        "links": [
+            "8281c86e7c20a571"
+        ],
+        "x": 515,
+        "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "8281c86e7c20a571",
+        "type": "link in",
+        "z": "80918f6b.83622",
+        "name": "",
+        "links": [
+            "22c6eae9272877dc"
+        ],
+        "x": 795,
+        "y": 2300,
+        "wires": [
+            [
+                "b11f639b04f3efb1"
+            ]
+        ]
+    },
+    {
+        "id": "94bf9fb90ac15d9d",
+        "type": "change",
+        "z": "80918f6b.83622",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "setpoint",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 2220,
+        "wires": [
+            [
+                "6ae623feb3e9882b"
+            ]
+        ]
+    },
+    {
+        "id": "cd5d5fb39d80b91c",
+        "type": "link out",
+        "z": "80918f6b.83622",
+        "name": "currentTension",
+        "mode": "link",
+        "links": [],
+        "x": 875,
+        "y": 2520,
+        "wires": []
     },
     {
         "id": "880a338331a21a4d",
