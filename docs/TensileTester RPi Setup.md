@@ -71,5 +71,5 @@ OS version : raspios bullseye
       ```
 13. Once restarted, you can bring up the node-red dashboard on a computer on the same network as the `tensilepi` by connecting to `http://tensilepi.local:1880/ui` in a browser.
     * changes made in the flow editor will be reflected in the UI once they are "deployed"
-14. 
+14. The flow editor can be accessed by connecting to `http://tensilepi.local:1880`
   
