@@ -1,0 +1,12 @@
+{
+    "name": "tensile-tester-flow",
+    "description": "Node-Red project for the Hussein Lab Tensile Tester",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flows_tensilepi.json",
+            "credentialsFile": "flows_tensilepi_cred.json"
+        }
+    }
+}
