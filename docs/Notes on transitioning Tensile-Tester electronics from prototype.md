@@ -14,8 +14,8 @@ ROT - Two stepper motors on rotary tables they are counter-rotating and connecte
 | 17 | ROT_DRIVE, drive signal to rotary table stepper motors | 17 |
 | 3V3 | Power from RPi to stepper driver | 3V3 |
 
-![RPi Prototype](./images/Tensile Tester circuit board.png)
-![RPi Prototype detail](./images/Tensile Tester circuit board closeup.png)
+![](./images/Tensile Tester circuit board.png)
+![](./images/Tensile Tester circuit board closeup.png)
 ![](./images/40-pin-gpio-extension-board-raspberry-pi-2-b-3.jpg)
 
 | Ribbon Wire Colour | Header Pin | RPi GPIO | Description |
