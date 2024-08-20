@@ -1,4 +1,4 @@
 *.backup
 *obsidian*
 *drawio.bkp*
-
+*.DS_Store
