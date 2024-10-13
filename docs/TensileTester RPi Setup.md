@@ -54,7 +54,7 @@ OS version : raspios bullseye
       ```
 	3. Check if it's running by `ps ax | grep node` and if not, start using
       ```
-      sudo systemctl enable nodered.service
+      sudo systemctl start nodered.service
 	  ```
 	4. Now you can bring up the node-red flow editor on a computer on the same network as the `tensilepi` by connecting to `http://tensilepi.local:1880` in a browser
 10. Install the node-red dashboard and git packages
