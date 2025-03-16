@@ -71,4 +71,14 @@ OS version : raspios bullseye
 13. Once restarted, you can bring up the node-red dashboard on a computer on the same network as the `tensilepi` by connecting to `http://tensilepi.local:1880/ui` in a browser.
     * changes made in the flow editor will be reflected in the UI once they are "deployed"
 14. The flow editor can be accessed by connecting to `http://tensilepi.local:1880`
+15. We need a couple of contributed nodes. They are installed from the node-red root directory, so `cd ~/.node-red`
+16. Install the PID node; `npm install node-red-contrib-pid`
+17. Install the UI List node; `npm install node-red-node-ui-list`
+18. Restart node-red; `node-red-restart`
+19. Now, `PID` will show up under the function group and `list` under the dashboard group
+20. The next thing to do is import the `flows_tensilepi.json` file to get back all our control UI and algorithms.
+21. Using the "stacked" aka "hamburger" menu at the top right, choose Import.
+22. Select the `flows_tensilepi.json` file from the repo and import.
+23. The Flow should appear as a tab. 
+24. Deploy it and check that the UI is now there.
   
