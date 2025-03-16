@@ -2,52 +2,48 @@
 OS version : raspios bullseye
 
 1. Follow the [usual steps](https://www.raspberrypi.com/software/) to create a RPi image and boot
-2. For the following we use a terminal
-3. Use `sudo raspi-config` to run the configuration;
-	1.  Set the host name to `tensilepi` 
-	2.  Enable ssh
-4. Change the default password to something like `t3ns1le` ; i.e., use `passwd`
-5. Update the system; `sudo apt update`, then `sudo apt upgrade`
+	1. It is easiest to use the dedicated application, *Raspberry Pi Imager*, that creates the SD card for your RPi
+	2. Choose to customize the installed image
+	3. Set the hostname to `tensilepi` 
+	4. Set the username to `tensile` and the password to `t3ns1le`
+	5. You can try to set the wireless nework to UWS and your password, but usually this doesn't work because UWS is, well, UWS :-(
+	6. Set the wireless LAN country to CA
+	7. Set the locale to Edmonton and leave the keyboard a US
+	8. Change to the Services section and enable SSH. Select "Use password authentication"
+	9. Save and say yes to using the custom settings, then yes to start formating the image
+2. When the Imager is finished, pop the SD card into the RPi and boot
+3. The very first boot will take some time as the OS configures itself.
+4. Connect to Wifi
+	1. It appears that UWS at the UofA will not work
+	2. An option is to tether to a cellphone, which does work well.
+5. Update the system via the terminal; `sudo apt update`, then `sudo apt upgrade`
 	1. This may take a while
-6. Install and configure `tightvncserver` to enable VNC
-	1. Follow the [socketxp.com](https://www.socketxp.com/docs/guide/iot-remote-desktop-vnc-access.html#pre-requisites) guide down to the SocketXP IoT Agent installation section
-7. Configure `tightvncserver` to start at boot
-      `sudo vi /etc/init.d/tightvncserver`
-   then insert
-      ```
-      #!/bin/sh
-      # /etc/init.d/tightvncserver
-      # Set the VNCUSER variable to the name of the user to start tightvncserver under
-      VNCUSER='pi'
-      case "$1" in
-       start)
-         su $VNCUSER -c '/usr/bin/tightvncserver :1'
-         echo "Starting TightVNC server for $VNCUSER"
-         ;;
-       stop)
-         pkill Xtightvnc
-         echo "Tightvncserver stopped"
-         ;;
-       *)
-         echo "Usage: /etc/init.d/tightvncserver {start|stop}"
-         exit 1
-         ;;
-      esac
-      exit 0
-      ```
-   finally, make executable and reboot
-      ```
-	  sudo chmod 755 /etc/init.d/tightvncserver
-	  sudo update-rc.d tightvncserver defaults
-	  sudo reboot
+6. Enable VNC
+	1. `sudo raspi-config`
+	2. Navigate to Interface Option and hit enter
+	3. Navigate to VNC and hit enter
+	4. Set the VNC server to be yes, hit enter
+	5. exit `raspi-config`
+	6. reboot
+7.  Test the VNC connection using your laptop
+	1.  On a Mac, install `tigervnc-viewer`, for example
+	2.  Get the RPi IP address
+	3.  Connect using the VNC viewer
+8. Install and configure `node-red` using this [guide](https://nodered.org/docs/getting-started/raspberrypi) 
+	1. Execute in a terminal the following
+     
 	  ```
-8. An example VNC viewer configuration should rememble this one from "Chicken"
-![[chicken_to_tensilepi.png]]
-9. Install and configure `node-red` using this [guide](https://nodered.org/docs/getting-started/raspberrypi)
-	1. 	Execute in a terminal the following
-      ```
-      bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
+	  bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
 	  ```
+	  * Install the RPi specific nodes
+	  * Don't set up user security
+	  * Don't set up the Projects feature
+	  * Name the flows file `flows_tensilepi.json`
+	  * Use `t3ns1le` for the catchphrase
+	  * Choose the default colour scheme
+	  * Select the default font, monaco
+	  * Allow Function nodes to load external modules
+
 	2. Enable node-red to start at boot
       ```
       sudo systemctl enable nodered.service
@@ -64,7 +60,10 @@ OS version : raspios bullseye
       npm i npm install node-red-contrib-git-nodes
       ```
 11. Install and configure [pigpio](https://gist.github.com/tstellanova/8b1fb350a148eace6541b5fbd2c021ca)
-	* `sudo systemctl enable pigpiod`
+           ```
+		   
+		   sudo systemctl enable pigpiod
+		   ```
 12. Restart node-red on the RPi
       ```
       node-red-restart
