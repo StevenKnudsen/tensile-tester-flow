@@ -81,4 +81,11 @@ OS version : raspios bullseye
 22. Select the `flows_tensilepi.json` file from the repo and import.
 23. The Flow should appear as a tab. 
 24. Deploy it and check that the UI is now there.
+25. Last, build the C modules
+    ```
+	cd tensile-tester-flow/software
+	chmod +x build.sh # just in case
+	./build.sh
+	```
+26. End
   
